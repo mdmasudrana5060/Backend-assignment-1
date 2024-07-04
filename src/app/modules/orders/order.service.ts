@@ -1,8 +1,14 @@
+import { ProductModel } from '../products/product.model';
 import { Order } from './order.interface';
 import { OrderModel } from './order.model';
 
 const createOrderIntoDB = async (order: Order) => {
   try {
+    const product = await ProductModel.findById(order.productId);
+    console.log(product);
+    if (!product) {
+      throw new Error('ProductNotFound');
+    }
     const result = await OrderModel.create(order);
     return result;
   } catch (error) {

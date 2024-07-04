@@ -4,6 +4,7 @@ import { orderService } from './order.service';
 const createOrder = async (req: Request, res: Response) => {
   try {
     const { order } = req.body;
+    console.log(order, 'from controller');
     const result = await orderService.createOrderIntoDB(order);
 
     res.status(200).json({
@@ -21,12 +22,12 @@ const createOrder = async (req: Request, res: Response) => {
 };
 const getOrders = async (req: Request, res: Response) => {
   try {
-    const products = await orderService.getOrdersFromDB();
+    const orders = await orderService.getOrdersFromDB();
 
     res.status(200).json({
       success: true,
       message: 'Orders fetched successfully',
-      data: products,
+      data: orders,
     });
   } catch (error) {
     res.status(500).json({
@@ -45,12 +46,12 @@ const getOrder = async (req: Request, res: Response) => {
         message: 'Search Term is required',
       });
     }
-    const products = await orderService.getOrderFromDB(email);
+    const orders = await orderService.getOrderFromDB(email);
 
     res.status(200).json({
       success: true,
       message: 'Orders fetched successfully',
-      data: products,
+      data: orders,
     });
   } catch (error) {
     res.status(500).json({
