@@ -4,15 +4,37 @@ import { OrderModel } from './order.model';
 
 const createOrderIntoDB = async (order: Order) => {
   try {
-    const product = await ProductModel.findById(order.productId);
-    console.log(product);
+    const product = await ProductModel.findOne({ id: order.productId });
+
     if (!product) {
-      throw new Error('ProductNotFound');
+      return {
+        status: 404,
+        message: 'Product is not found',
+      };
     }
+
+    if (product.inventory.quantity < order.quantity) {
+      return {
+        status: 400,
+        message: 'Insufficient quantity available in inventory',
+      };
+    }
+
+    product.inventory.quantity -= order.quantity;
+    if (product.inventory.quantity <= 0) {
+      product.inventory.inStock = false;
+    }
+
+    await product.save();
+
     const result = await OrderModel.create(order);
+
     return result;
   } catch (error) {
-    console.log(error);
+    return {
+      status: 400,
+      message: 'something went wrong',
+    };
   }
 };
 
@@ -22,6 +44,10 @@ const getOrdersFromDB = async () => {
     return orders;
   } catch (error) {
     console.log(error);
+    return {
+      status: 400,
+      message: 'Something went wrong',
+    };
   }
 };
 
@@ -35,8 +61,9 @@ const getOrderFromDB = async (email: string) => {
 
     return order;
   } catch (error) {
-    console.error(`Error retrieving product with email: ${email}`, error);
-    throw error;
+    return {
+      message: 'There is no order',
+    };
   }
 };
 

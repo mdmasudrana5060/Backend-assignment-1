@@ -4,7 +4,7 @@ import { orderService } from './order.service';
 const createOrder = async (req: Request, res: Response) => {
   try {
     const { order } = req.body;
-    console.log(order, 'from controller');
+
     const result = await orderService.createOrderIntoDB(order);
 
     res.status(200).json({
@@ -13,11 +13,15 @@ const createOrder = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong',
-      error: error,
-    });
+    console.log(error);
+    // const errorMessage = 'Something went wrong';
+    // const statusCode = 500;
+
+    // res.status(statusCode).json({
+    //   success: false,
+    //   message: errorMessage,
+    //   error: error.message || error,
+    // });
   }
 };
 const getOrders = async (req: Request, res: Response) => {

@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { productServices } from './product.service';
+import productValidationSchema from './product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const { product } = req.body;
-    const result = await productServices.createProductIntoDB(product);
+    const product = req.body.product;
+    const zodParsedData = productValidationSchema.parse(product);
+    const result = await productServices.createProductIntoDB(zodParsedData);
 
     res.status(200).json({
       success: true,
@@ -78,7 +80,7 @@ const updateProduct = async (req: Request, res: Response) => {
 const searchProduct = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
-    console.log(searchTerm);
+
     if (!searchTerm || typeof searchTerm !== 'string') {
       return res.status(500).json({
         success: false,
