@@ -29,8 +29,7 @@ const getProductFromDB = async (id: string) => {
 
     return product;
   } catch (error) {
-    console.error(`Error retrieving product with id: ${id}`, error);
-    throw error;
+    console.log(`Error retrieving product with id: ${id}`, error);
   }
 };
 const updateProductIntoDB = async (
@@ -58,13 +57,12 @@ const searchProductsFromDB = async (searchTerm: string) => {
   try {
     const regex = new RegExp(searchTerm, 'i');
 
-    const product = await ProductModel.find({
-      $or: [{ name: regex }, { description: regex }],
+    const products = await ProductModel.find({
+      $or: [{ name: { $regex: regex } }, { description: { $regex: regex } }],
     });
-
-    return product;
+    return products;
   } catch (error) {
-    console.error(
+    console.log(
       `Error fetching products for search term: ${searchTerm}`,
       error,
     );
@@ -82,7 +80,7 @@ const deleteProductFromDB = async (id: string) => {
 
     return deletedProduct;
   } catch (error) {
-    console.error(`Error deleting product with id: ${id}`, error);
+    console.log(`Error deleting product with id: ${id}`, error);
     throw error;
   }
 };

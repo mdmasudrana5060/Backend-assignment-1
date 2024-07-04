@@ -77,6 +77,7 @@ const updateProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
 const searchProduct = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
@@ -101,6 +102,7 @@ const searchProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
