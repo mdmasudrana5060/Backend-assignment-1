@@ -20,3 +20,4 @@ const orderSchema = new Schema<Order>({
     min: 1,
   },
 });
+export const OrderModel = model<Order>('order', orderSchema);
