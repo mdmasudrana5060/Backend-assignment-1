@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { orderService } from './order.service';
+import orderValidationSchema from './order.validation';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { order } = req.body;
-
-    const result = await orderService.createOrderIntoDB(order);
+    const order = req.body.order;
+    const zodParsedData = orderValidationSchema.parse(order);
+    const result = await orderService.createOrderIntoDB(zodParsedData);
 
     res.status(200).json({
       success: true,
@@ -13,15 +14,11 @@ const createOrder = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
-    // const errorMessage = 'Something went wrong';
-    // const statusCode = 500;
-
-    // res.status(statusCode).json({
-    //   success: false,
-    //   message: errorMessage,
-    //   error: error.message || error,
-    // });
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 const getOrders = async (req: Request, res: Response) => {

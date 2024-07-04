@@ -43,7 +43,6 @@ const getOrdersFromDB = async () => {
     const orders = await OrderModel.find();
     return orders;
   } catch (error) {
-    console.log(error);
     return {
       status: 400,
       message: 'Something went wrong',
